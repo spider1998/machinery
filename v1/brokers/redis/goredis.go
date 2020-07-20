@@ -325,18 +325,19 @@ func (b *BrokerGR) nextTask(queue string) (result []byte, err error) {
 	}
 	pollPeriod := time.Duration(pollPeriodMilliseconds) * time.Millisecond
 
-	items, err := b.rclient.BLPop(context.Background(), pollPeriod, queue).Result()
+	//items, err := b.rclient.BLPop(context.Background(), pollPeriod, queue).Result()
+	items, err :=b.rclient.LPop(queue).Result()
 	if err != nil {
 		return []byte{}, err
 	}
 
 	// items[0] - the name of the key where an element was popped
 	// items[1] - the value of the popped element
-	if len(items) != 2 {
-		return []byte{}, redis.Nil
-	}
+	//if len(items) != 2 {
+	//	return []byte{}, redis.Nil
+	//}
 
-	result = []byte(items[1])
+	result = []byte(items)
 
 	return result, nil
 }
